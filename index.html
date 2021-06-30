@@ -187,11 +187,18 @@
           <p><strong>在数据标准化后，Pearson相关性系数、Cosine相似度、欧式距离的平方可认为是等价的</strong>。换句话说，如果你的数据符合正态分布或者经过了标准化处理，那么这三种度量方法输出等价。<strong>对于标准化后的数据求欧氏距离平方并经过简单的线性变化，其实就是Pearson系数</strong></p>
 <p>我们一般用欧式距离（向量间的距离）来衡量向量的相似度，但欧式距离无法考虑不同变量间取值的差异。举个例子，变量a取值范围是0至1，而变量b的取值范围是0至10000，计算欧式距离时变量b上微小的差异就会决定运算结果。<strong>而Pearson相关性系数可以看出是升级版的欧氏距离平方，因为它提供了对于变量取值范围不同的处理步骤。因此对不同变量间的取值范围没有要求（unit free），最后得到的相关性所衡量的是趋势。而不同变量量纲上差别在计算过程中去掉了，等价于z-score标准化</strong>。</p>
 <p>而未经升级的欧式距离以及cosine相似度，对变量的取值范围是敏感的，在使用前需要进行适当的处理。我个人的经验是，<strong>在低维度可以优先使用标准化后的欧式距离或者其他距离度量</strong>，<strong>在高维度时Pearson相关系数更加适合</strong>。不过说到底，这几个衡量标准差别不大，很多时候的输出结果是非常相似的。</p>
-<p><strong>欧氏距离（Euclidean Distance）</strong>是常见的相似性度量方法，可求两个向量间的距离，取值范围为0至正无穷。显然，如果两个向量间的距离较小，那么向量也肯定更为相似。此处需要注意的一点是，欧氏距离计算默认对于每一个维度给予相同的权重，因此如果不同维度的取值范围差别很大，那么结果很容易被某个维度所决定。解决方法除了对数据进行处理以外，还可以使用加权欧氏距离，不同维度使用不同的权重。<br>$$<br>d(X_,Y) = \sum_{i=1}^n(X_n-Y_n)^2<br>$$<br><strong>Pearson相关性系数（Pearson Correlation）</strong>是衡量向量相似度的一种方法。输出范围为-1到+1, 0代表无相关性，负值为负相关，正值为正相关。<br>$$<br>\rho(X,Y)=\frac{E[(X-\mu_{X})(Y-\mu_{Y})]}{\sigma_X\sigma_Y} =\frac{E[(X-\mu_{X})(Y-\mu_{Y})]}{\sqrt{\sum_{i=1}^{n}{(X_i-\mu_X)^2}}\sqrt{\sum_{i=1}^{n}{(Y_i-\mu_Y)^2}}}<br>$$<br><strong>Cosine相似度也是一种相似性度量</strong>，输出范围和Pearson相关性系数一致，含义也相似。<br>$$<br>c(X,Y)=\frac{X\cdot Y}{\left| X \right|\left| Y \right|} =\frac{\sum_{i=1}^{n}{X_iY_i}}{\sqrt{\sum_{i=1}^{n}{X_i^2}}\sqrt{\sum_{i=1}^{n}{Y_i^2}}}<br>$$</p>
-<p><strong>标准化（Standardization）</strong>是一种常见的数据缩放手段，标准化后的数据均值为0，标准差为1。<br>$$<br>z(X) = \frac{X_i-\mu _X}{\sigma_X}<br>$$</p>
-<p><strong>平方和（Summed Square）与样本方差（Sample Variance）之间的关系</strong><br>$$<br>\sigma_X=\sqrt{\frac{\sum_{i=1}^{n}{(X_i-\mu_X)^2}}{n-1}}<br>$$</p>
-<p>$$<br>(n-1)\sigma_X^2 = \sum_{i=1}^{n}{(X_i-\mu_X)^2}<br>$$</p>
-
+<p><strong>欧氏距离（Euclidean Distance）</strong>是常见的相似性度量方法，可求两个向量间的距离，取值范围为0至正无穷。显然，如果两个向量间的距离较小，那么向量也肯定更为相似。此处需要注意的一点是，欧氏距离计算默认对于每一个维度给予相同的权重，因此如果不同维度的取值范围差别很大，那么结果很容易被某个维度所决定。解决方法除了对数据进行处理以外，还可以使用加权欧氏距离，不同维度使用不同的权重。</p>
+<script type="math/tex; mode=display">
+d(X_,Y) = \sum_{i=1}^n(X_n-Y_n)^2</script><p><strong>Pearson相关性系数（Pearson Correlation）</strong>是衡量向量相似度的一种方法。输出范围为-1到+1, 0代表无相关性，负值为负相关，正值为正相关。</p>
+<script type="math/tex; mode=display">
+\rho(X,Y)=\frac{E[(X-\mu_{X})(Y-\mu_{Y})]}{\sigma_X\sigma_Y} =\frac{E[(X-\mu_{X})(Y-\mu_{Y})]}{\sqrt{\sum_{i=1}^{n}{(X_i-\mu_X)^2}}\sqrt{\sum_{i=1}^{n}{(Y_i-\mu_Y)^2}}}</script><p><strong>Cosine相似度也是一种相似性度量</strong>，输出范围和Pearson相关性系数一致，含义也相似。</p>
+<script type="math/tex; mode=display">
+c(X,Y)=\frac{X\cdot Y}{\left| X \right|\left| Y \right|} =\frac{\sum_{i=1}^{n}{X_iY_i}}{\sqrt{\sum_{i=1}^{n}{X_i^2}}\sqrt{\sum_{i=1}^{n}{Y_i^2}}}</script><p><strong>标准化（Standardization）</strong>是一种常见的数据缩放手段，标准化后的数据均值为0，标准差为1。</p>
+<script type="math/tex; mode=display">
+z(X) = \frac{X_i-\mu _X}{\sigma_X}</script><p><strong>平方和（Summed Square）与样本方差（Sample Variance）之间的关系</strong></p>
+<script type="math/tex; mode=display">
+\sigma_X=\sqrt{\frac{\sum_{i=1}^{n}{(X_i-\mu_X)^2}}{n-1}}</script><script type="math/tex; mode=display">
+(n-1)\sigma_X^2 = \sum_{i=1}^{n}{(X_i-\mu_X)^2}</script>
       
     </div>
 
