@@ -145,6 +145,101 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/01/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Zhao Chen">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="斜光的个人主页">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/01/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">异常值检测算法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-07-01 10:29:29 / Modified: 10:53:20" itemprop="dateCreated datePublished" datetime="2021-07-01T10:29:29+08:00">2021-07-01</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="1-数字异常值-Numeric-Outlier"><a href="#1-数字异常值-Numeric-Outlier" class="headerlink" title="1. 数字异常值 ( Numeric Outlier )"></a>1. 数字异常值 ( Numeric Outlier )</h3><p><strong>均方差</strong></p>
+<p>在统计学中，如果一个数据分布近似正态，那么大约 68% 的数据值会在均值的一个标准差范围内，大约 95% 会在两个标准差范围内，大约 99.7% 会在三个标准差范围内。因此，如果你有任何数据点超过标准差的 3 倍，那么这些点很有可能是异常值或离群点。</p>
+<p><img src="https://i.loli.net/2021/07/01/3wkjlsuSxcf51RL.png" alt="image-20210701103314459" style="zoom: 33%;" /></p>
+<p><strong>箱型图</strong></p>
+<p>箱形图可以用来观察数据整体的分布情况，利用中位数，25/%分位数，75/%分位数，上边界，下边界等统计量来来描述数据的整体分布情况。通过计算这些统计量，生成一个箱体图，箱体包含了大部分的正常数据，而在箱体上边界和下边界之外的，就是异常数据。</p>
+<p>其中上下边界的计算公式如下：</p>
+<p>UpperLimit=Q3+1.5IQR=75%分位数+（75%分位数-25%分位数）*1.5，</p>
+<p>LowerLimit=Q1－1.5IQR=25%分位数-（75%分位数-25%分位数）*1.5</p>
+<p>（将数据由小到大排序，处于中间的为中位数，即50%分位数，在75%位置的即为75%分位数或四分之三分位数——Q3，在25%位置的即为25%分位数或四分之一分位数——Q1）</p>
+<p>参数说明：</p>
+<p>\1. Q1表示下四分位数，即25%分位数；Q3为上四分位数，即75%分位数；IQR表示上下四分位差，系数1.5是一种经过大量分析和经验积累起来的标准，一般情况下不做调整。</p>
+<p>\2. 分位数的参数可根据具体预警结果调整：25%和75%，是比较灵敏的条件，在这种条件下，多达25%的数据可以变得任意远而不会很大地扰动四分位。具体业务中可结合拟合结果自行调整为其他分位。</p>
+<p><img src="https://i.loli.net/2021/07/01/y13b7Ou4KchseSF.png" alt="preview"></p>
+<h3 id="2-Z-score"><a href="#2-Z-score" class="headerlink" title="2. Z-score"></a>2. Z-score</h3><p>Z-score是一维或低维特征空间中的参数异常检测方法。该技术假定数据是高斯分布，异常值是分布尾部的数据点，因此远离数据的平均值。距离的远近取决于使用公式计算的归一化数据点 $Z_i$ 的设定阈值 Zthr：</p>
+<script type="math/tex; mode=display">
+Z_i = \frac{X_i-\mu}{\sigma}</script><p>然后经过标准化处理后，异常值也进行标准化处理，其绝对值大于Zthr：</p>
+<script type="math/tex; mode=display">
+|Z_i| > Z_{thr}</script><p>Zthr值一般设置为2.5、3.0和3.5。</p>
+<h3 id="3-DBSCAN"><a href="#3-DBSCAN" class="headerlink" title="3. DBSCAN"></a>3. DBSCAN</h3><p>该技术基于 DBSCAN聚类方法，DBSCAN是一维或多维特征空间中的非参数，基于密度的离群值检测方法。</p>
+<p>在DBSCAN聚类技术中，所有数据点都被定义为核心点（Core Points）、边界点（Border Points）或噪声点（Noise Points）。</p>
+<ul>
+<li>核心点是在距离ℇ内至少具有最小包含点数（minPTs）的数据点；</li>
+<li>边界点是核心点的距离ℇ内邻近点，但包含的点数小于最小包含点数（minPTs）；</li>
+<li>所有的其他数据点都是噪声点，也被标识为异常值；</li>
+</ul>
+<p>从而，异常检测取决于所要求的最小包含点数、距离ℇ和所选择的距离度量，比如欧几里得或曼哈顿距离。</p>
+<h3 id="4-孤立森林-Isolation-Forest"><a href="#4-孤立森林-Isolation-Forest" class="headerlink" title="4. 孤立森林 ( Isolation Forest )"></a>4. 孤立森林 ( Isolation Forest )</h3><p>该方法是一维或多维特征空间中大数据集的非参数方法，其中的一个重要概念是孤立数。</p>
+<p>孤立数是孤立数据点所需的拆分数。通过以下步骤确定此分割数：</p>
+<ul>
+<li>随机选择要分离的点“a”；</li>
+<li>选择在最小值和最大值之间的随机数据点“b”，并且与“a”不同；</li>
+<li>如果“b”的值低于“a”的值，则“b”的值变为新的下限；</li>
+<li>如果“b”的值大于“a”的值，则“b”的值变为新的上限；</li>
+<li>只要在上限和下限之间存在除“a”之外的数据点，就重复该过程；</li>
+</ul>
+<p>与孤立非异常值相比，它需要更少的分裂来孤立异常值，即异常值与非异常点相比具有更低的孤立数。因此，如果数据点的孤立数低于阈值，则将数据点定义为异常值。</p>
+<p>阈值是基于数据中异常值的估计百分比来定义的，这是异常值检测算法的起点。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/30/%E7%9A%AE%E5%B0%94%E9%80%8A%E7%9B%B8%E5%85%B3%E7%B3%BB%E6%95%B0(Pearson-Correlation-Coefficient)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -279,7 +374,7 @@ z(X) = \frac{X_i-\mu _X}{\sigma_X}</script><p><strong>平方和（Summed Square�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
