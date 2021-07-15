@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="1. Challenges由于数据的稀疏性，对广告进行CTR预估是比较具有挑战性的，预估出来的CTR的可靠性不高，且具有较大的方差。主要有以下两类场景： 1）当广告的展示次数较少的时候，对其直接进行CTR的统计计算会导致一个偏高的结果。比如某个广告只展示了1次，被点击了1次，则纯粹的统计CTR&#x3D;1.0，这显然是过分高估了。 2）当广告的展示次数很大，但点击次数很少或几乎没有的时候，对其直接进行CT">
+  <meta name="description" content="1. Challenges由于数据的稀疏性，对广告进行CTR预估是比较具有挑战性的，预估出来的CTR的可靠性不高，且具有较大的方差。 1）当广告的展示次数较少的时候，对其直接进行CTR的统计计算会导致一个偏高的结果。比如某个广告只展示了1次，被点击了1次，则纯粹的统计CTR&#x3D;1.0，这显然是过分高估了。 2）当广告的展示次数很大，但点击次数很少或几乎没有的时候，对其直接进行CTR的统计计算会导致一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CTR预估中的贝叶斯平滑方法">
 <meta property="og:url" content="http://example.com/2021/07/03/%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%B9%B3%E6%BB%91CTR%E7%89%B9%E5%BE%81/index.html">
 <meta property="og:site_name" content="斜光的个人主页">
-<meta property="og:description" content="1. Challenges由于数据的稀疏性，对广告进行CTR预估是比较具有挑战性的，预估出来的CTR的可靠性不高，且具有较大的方差。主要有以下两类场景： 1）当广告的展示次数较少的时候，对其直接进行CTR的统计计算会导致一个偏高的结果。比如某个广告只展示了1次，被点击了1次，则纯粹的统计CTR&#x3D;1.0，这显然是过分高估了。 2）当广告的展示次数很大，但点击次数很少或几乎没有的时候，对其直接进行CT">
+<meta property="og:description" content="1. Challenges由于数据的稀疏性，对广告进行CTR预估是比较具有挑战性的，预估出来的CTR的可靠性不高，且具有较大的方差。 1）当广告的展示次数较少的时候，对其直接进行CTR的统计计算会导致一个偏高的结果。比如某个广告只展示了1次，被点击了1次，则纯粹的统计CTR&#x3D;1.0，这显然是过分高估了。 2）当广告的展示次数很大，但点击次数很少或几乎没有的时候，对其直接进行CTR的统计计算会导致一">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://i.loli.net/2021/07/03/oxVKB3AXPwqNLRT.png">
 <meta property="og:image" content="https://i.loli.net/2021/07/03/tfG8YLeO29cXlR6.png">
@@ -34,9 +34,9 @@
 <meta property="og:image" content="https://i.loli.net/2021/07/03/2ysV8OmjavSczw7.png">
 <meta property="og:image" content="https://i.loli.net/2021/07/03/rgUmH5fLqAjZnsp.png">
 <meta property="og:image" content="https://i.loli.net/2021/07/03/Nohtd8jfMx3KvwY.png">
-<meta property="og:image" content="c:/Users/14981/AppData/Roaming/Typora/typora-user-images/image-20210703215514582.png">
+<meta property="og:image" content="https://i.loli.net/2021/07/15/vz4lIUGXpLiV9g8.png">
 <meta property="article:published_time" content="2021-07-03T04:28:58.402Z">
-<meta property="article:modified_time" content="2021-07-03T13:59:29.718Z">
+<meta property="article:modified_time" content="2021-07-15T13:54:30.016Z">
 <meta property="article:author" content="Zhao Chen">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2021/07/03/oxVKB3AXPwqNLRT.png">
@@ -181,10 +181,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-07-03 12:28:58 / Modified: 21:59:29" itemprop="dateCreated datePublished" datetime="2021-07-03T12:28:58+08:00">2021-07-03</time>
+              <time title="Created: 2021-07-03 12:28:58" itemprop="dateCreated datePublished" datetime="2021-07-03T12:28:58+08:00">2021-07-03</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-07-15 21:54:30" itemprop="dateModified" datetime="2021-07-15T21:54:30+08:00">2021-07-15</time>
+              </span>
 
           
 
@@ -197,13 +203,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="1-Challenges"><a href="#1-Challenges" class="headerlink" title="1. Challenges"></a>1. Challenges</h3><p>由于数据的稀疏性，对广告进行CTR预估是比较具有挑战性的，预估出来的CTR的可靠性不高，且具有较大的方差。主要有以下两类场景：</p>
+        <h2 id="1-Challenges"><a href="#1-Challenges" class="headerlink" title="1. Challenges"></a>1. Challenges</h2><p>由于数据的稀疏性，对广告进行CTR预估是比较具有挑战性的，预估出来的CTR的可靠性不高，且具有较大的方差。</p>
 <p>1）当广告的展示次数较少的时候，对其直接进行CTR的统计计算会导致一个偏高的结果。比如某个广告只展示了1次，被点击了1次，则纯粹的统计CTR=1.0，这显然是过分高估了。</p>
 <p>2）当广告的展示次数很大，但点击次数很少或几乎没有的时候，对其直接进行CTR的统计计算会导致一个偏低的结果。比如某个广告没有被点击过，则纯粹的统计CTR=0.0，这显然是过分低估了。</p>
-<h3 id="2-数据层级结构"><a href="#2-数据层级结构" class="headerlink" title="2. 数据层级结构"></a>2. 数据层级结构</h3><p>在许多场景下，数据是很自然地存在层级结构，或者可以通过数据的聚类的方式得到层级结构的。</p>
+<h2 id="2-Motivation"><a href="#2-Motivation" class="headerlink" title="2. Motivation"></a>2. Motivation</h2><p>在许多场景下，数据是很自然地存在层级结构，或者可以通过数据的聚类的方式得到层级结构的。</p>
 <p><img src="https://i.loli.net/2021/07/03/oxVKB3AXPwqNLRT.png" alt="img"></p>
 <p>我们假设事件的发生并不是相互独立的，相反，在层级结构中相对比较靠近的两个事件的相关性要大于距离较远的两个事件，它们之间拥有很多共通之处。于是，我们便可以利用“相似”事件的信息来丰富某个我们感兴趣的事件（这个事件本事的发生的次数比较少）。具体到我们现有的场景下，可以利用与我们需要预估的事件（比如query-ad pair，或者page-ad pair）的“相似”事件的信息来帮助我们来做出预估计算。</p>
-<p>假设有相同account下的N个ad $(a_1, a_2, …, a_N)$ ，以及所在的page，我们感兴趣的是page-ad pair的CTR，于是我们可以利用贝叶斯的方法来结合（1）这个ad本身的信息，以及（2）该page下与这个ad来自相同account的其它ad的信息。我们观测到的点击信息为 $(C_1, C_2, …,C_N)$ ，这些点击信息源自各个ad的隐含CTR信息 $(r_1, r_2,…,r_N)$，点击信息服从二项分布 $Binomial (I_i, C_i)$ 有关，还与其所属的account的整体信息有关，即与 $\alpha, \beta$ 这对超参数有关。我们可以利用二项分布和贝塔分布的共轭特性，计算所有ad所属的相同account的似然函数，然后利用最大似然估计（MLE）来计算超参数  $\alpha, \beta$ ，当有了   $\alpha, \beta$ 的估计值 $\hat{\alpha}, \hat{\beta}$后，我们便可以得到每个ad的后验估计：$\hat{r}_i=(C_i+\hat{\alpha}) / (I_i + \hat{\alpha} + \hat{\beta})$ 。这个后验估计值可以作为一个平滑后的CTR值，它要比单纯地统计CTR $C_i / I_i$ 拥有更小的方差，更加稳定。</p>
+<p>假设有相同account 下的N个ad $(a_1, a_2, …, a_N)$ ，以及所在的page，我们感兴趣的是page-ad pair的CTR，于是我们可以利用贝叶斯的方法来结合（1）这个ad本身的信息，以及（2）该page下与这个ad来自相同account的其它ad的信息。我们观测到的点击信息为 $(C_1, C_2, …,C_N)$ ，这些点击信息源自各个ad的潜在的CTR信息 $(r_1, r_2,…,r_N)$ 有关，点击信息服从二项分布 $Binomial (I_i, r_i)$ 。那么潜在的每个 ad的CTR，可以看作是来自于它们相同的account的公有信息，其服从 $Beta(\alpha, \beta)$。于是乎，每个ad的隐含CTR值，不仅与观测到的展示点击数据 $(I_i, C_i)$ 有关，还与其所属的account的整体信息有关，即与 $\alpha, \beta$ 这对超参数有关。我们可以利用二项分布和贝塔分布的共轭特性，计算所有ad所属的相同account的似然函数，然后利用最大似然估计（MLE）来计算超参数</p>
+<p>我们观测到的点击信息为 $(C_1, C_2, …,C_N)$ ，这些点击信息源自各个ad的潜在的CTR信息 $(r_1, r_2,…,r_N)$，点击信息服从二项分布 $Binomial (I_i, C_i)$ 有关，还与其所属的account的整体信息有关，即与 $\alpha, \beta$ 这对超参数有关。我们可以利用二项分布和贝塔分布的共轭特性，计算所有ad所属的相同account的似然函数，然后利用最大似然估计（MLE）来计算超参数  $\alpha, \beta$ ，当有了   $\alpha, \beta$ 的估计值 $\hat{\alpha}, \hat{\beta}$后，我们便可以得到每个ad的后验估计：$\hat{r}_i=(C_i+\hat{\alpha}) / (I_i + \hat{\alpha} + \hat{\beta})$ 。这个后验估计值可以作为一个平滑后的CTR值，它要比单纯地统计CTR $C_i / I_i$ 拥有更小的方差，更加稳定。</p>
 <h3 id="3-数据连续性"><a href="#3-数据连续性" class="headerlink" title="3. 数据连续性"></a>3. 数据连续性</h3><p>在很多场景下，我们更关心CTR的趋势，而不是一个特定时间点的CTR值。因为对于展示量较少的page-ad pair，某个特定时间点的CTR预估值是包含很大噪声的。我们将展现和点击看做是离散集合的重复观测值，然后使用<strong>指数平滑技术</strong>进行CTR平滑。假设对于page-ad pair，我们有M天的展现 $(I_1, I_2, …, I_M)$ 和 点击 $(C_1, C_2, …, C_M)$ ，然后我们希望预估出第M天的CTR。我们将平滑后的展现和点击记为 $\hat{I}, \hat{C}$ ，它们可由下面公式得到（这里只给出了点击的公式计算，展现也同理）：</p>
 <p><img src="https://i.loli.net/2021/07/03/tfG8YLeO29cXlR6.png" alt="image-20210703214904575" style="zoom:50%;" /></p>
 <p>其中 $0 &lt; \gamma &lt; 1$ 是平滑系数，它控制着我们把历史信息纳入我们平滑的计算中的权重大小。</p>
@@ -221,7 +228,7 @@
 <p>将上述的log似然函数分别对α和β求导数，即为：</p>
 <p><img src="https://i.loli.net/2021/07/03/Nohtd8jfMx3KvwY.png" alt="image-20210703215438290" style="zoom:50%;" /></p>
 <p>通过fixed-point iteration方法，我们可以得到α和β在每一轮迭代中的更新公式：</p>
-<p><img src="C:\Users\14981\AppData\Roaming\Typora\typora-user-images\image-20210703215514582.png" alt="image-20210703215514582" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2021/07/15/vz4lIUGXpLiV9g8.png" alt="image-20210703215514582" style="zoom:50%;" /></p>
 <p>迭代的终止条件为一个固定的迭代次数（如1000次），或者α和β在一次迭代中的变化值都小于一个epsilon（如1E-10）。一旦有了 $\hat{\alpha}, \hat{\beta}$ 我们便可以得到每个ad的后验估计：$\hat{r}_i=(C_i+\hat{\alpha}) / (I_i + \hat{\alpha} + \hat{\beta})$</p>
 
     </div>
@@ -238,10 +245,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/07/02/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0%20(%E8%A5%BF%E7%93%9C%E4%B9%A6)/" rel="prev" title="集成学习 (ensemble learning, 西瓜书笔记)">
-      <i class="fa fa-chevron-left"></i> 集成学习 (ensemble learning, 西瓜书笔记)
+    <a href="/2021/07/01/%E6%A0%B7%E6%9C%AC%E4%B8%8D%E5%9D%87%E8%A1%A1/" rel="prev" title="样本不均衡问题">
+      <i class="fa fa-chevron-left"></i> 样本不均衡问题
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/15/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/" rel="next" title="feature selection">
+      feature selection <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -300,7 +310,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Challenges"><span class="nav-number">1.</span> <span class="nav-text">1. Challenges</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%95%B0%E6%8D%AE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">2. 数据层级结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%95%B0%E6%8D%AE%E8%BF%9E%E7%BB%AD%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">3. 数据连续性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%95%B0%E6%8D%AE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84%E7%9A%84%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%B9%B3%E6%BB%91%E6%96%B9%E6%B3%95%E5%85%B7%E4%BD%93%E4%BB%8B%E7%BB%8D"><span class="nav-number">4.</span> <span class="nav-text">4. 数据层级结构的贝叶斯平滑方法具体介绍</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Challenges"><span class="nav-number">1.</span> <span class="nav-text">1. Challenges</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Motivation"><span class="nav-number">2.</span> <span class="nav-text">2. Motivation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%95%B0%E6%8D%AE%E8%BF%9E%E7%BB%AD%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">3. 数据连续性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%95%B0%E6%8D%AE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84%E7%9A%84%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%B9%B3%E6%BB%91%E6%96%B9%E6%B3%95%E5%85%B7%E4%BD%93%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.2.</span> <span class="nav-text">4. 数据层级结构的贝叶斯平滑方法具体介绍</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -314,7 +324,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

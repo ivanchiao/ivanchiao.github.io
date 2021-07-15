@@ -145,6 +145,94 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/15/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Zhao Chen">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="斜光的个人主页">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/15/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/" class="post-title-link" itemprop="url">feature selection</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-07-15 21:51:57 / Modified: 21:51:49" itemprop="dateCreated datePublished" datetime="2021-07-15T21:51:57+08:00">2021-07-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="1-Dimensionality-reduction-降维"><a href="#1-Dimensionality-reduction-降维" class="headerlink" title="1. Dimensionality reduction (降维)"></a>1. Dimensionality reduction (降维)</h2><p><strong>Dimensionality reduction是数据挖掘/机器学习里面用来移除不相关特征(irrelevant, noisy)、冗余特征(redundant)的一种常用技术。</strong>所谓的不相关特征(irrelevant, noisy)，也就是说这些特征和你要做的事情没有半毛钱关系。举个例子，如果你的算法是为了预测一个上海某高校本科生毕业年薪是多少，但是你采集变量的时候采集了格陵兰岛今年的降水量。降水量这个特征可以说是没有半毛钱关系；所谓的冗余特征(redundant)，也就是说你采集的特征里面有可能高度相关的：比如说上一届学长学姐的平均税前收入、平均税后收入、平均纳税数额。</p>
+<p>那么同学们有可能会问：数据不是越多越好吗？我们为什么要移除其中一部分变量呢？其实主要有两个原因：1) 由于curse of dimensionality的存在（维数诅咒），导致很多在较低维度空间有效的算法，到了高维空间就可能无效了。2）由于时间和金钱成本，如果你的数据过于庞大，那么用来运行算法的时间以及储存数据的成本就会大大增加。对于大公司来说，金钱都不是太大问题；更多的时候，他们考虑的是时间成本。因为很多时候，他们都希望自己的算法能够提供实时决策(real-time decision)。</p>
+<p><strong>Dimensionality reduction可以粗略地分为两类</strong></p>
+<ul>
+<li>Feature extraction/Feature projection(特征提取/特征投影)</li>
+<li>Feature selection(特征选择)。</li>
+</ul>
+<h2 id="2-Feature-extraction-Feature-projection-特征提取-特征投影"><a href="#2-Feature-extraction-Feature-projection-特征提取-特征投影" class="headerlink" title="2. Feature extraction/ Feature projection(特征提取/特征投影)"></a>2. Feature extraction/ Feature projection(特征提取/特征投影)</h2><p><strong>Feature extraction/ Feature projection</strong>这一类方法将高维的特征空间投影到一个新的低维特征空间，这些新构造的低维空间里面的feature往往都是original feature（原始特征）的组合（线性组合，加权组合等）。我们可以看到，这一类技术并不保留original feature，所以使用这类降维技术的算法解释性(interpretability)都相对较差，从而相比之下feature selection有的时候更受欢迎。这一类技术的代表主要有： 主成分分析(Principle Component Analysis)、线性判别分析(Linear Discriminant Analysis)、典型相关分析(Canonical Correlation Analysis). 再说点题外话：<strong>对于这一类技术，我更喜欢叫它feature projection(特征投影)</strong>，这是为什么呢？因为feature extraction这个词汇在机器学习领域有不同的含义，比如说在时间序列分析里面，当我们讲feature extraction时，我们一般是指从一段时间序列里面提取(extract)出一些有用特征 (feature)，比如说此时间序列的max、min、mean、std、kurtosis、skewness等等。还有的部分文献会叫这种方法feature transformation(特征转换)，其实这也是不恰当的。因为在机器学习领域，当我们说feature transformation的时候，一般是指对一个变量进行函数变换，比如说x变到log(x)等等。</p>
+<h2 id="3-Feature-selection-特征选择"><a href="#3-Feature-selection-特征选择" class="headerlink" title="3. Feature selection(特征选择)"></a>3. Feature selection(特征选择)</h2><p><strong>Feature selection</strong> 这一类方法从原始特征(original feature)空间里面选择出一部分feature出来，我们希望这部分feature里面包括最少的不相关特征(irrelevant, noisy feature)和冗余特征(redundant)。我们可以看到，这类方法会保留原始特征，所以使用这类降维技术的算法解释性(interpretability)都相对较好，这也是为什么我在我的项目里面选择使用feature selection的原因。这一类技术的代表主要有：    Information Gain、Relief、Fisher Score、Lasso等。</p>
+<h2 id="4-Feature-selection-展开描述"><a href="#4-Feature-selection-展开描述" class="headerlink" title="4. Feature selection 展开描述"></a>4. Feature selection 展开描述</h2><p>鉴于很多同学或者参考文献一开始就讲Filter、Wrapper、Embedding各种分类方法，我认为在讲这些分类方法之前，我们首先需要考虑以下几件事：</p>
+<p>1）我们的算法是属于哪一类？</p>
+<ul>
+<li>Supervised(classification、regression)、</li>
+<li>unsupervised(clustering)、</li>
+<li>semi-supervised. </li>
+</ul>
+<p>2)  我们的特征空间属于哪一类：</p>
+<ul>
+<li>Flat features (也就是我们最常见的Dataset的情况，特征是静态的、而且彼此之间不存在特定的组织架构关系，结合后面两点对比来看就能理解); </li>
+<li>Structured Features（特征之间存在一定的组织架构关系），比如说 Group Structure（某些特征属于特定小组，若选则全都选、若不选则全都不要） 、Tree Structure （特征之间存在父子包含关系，若父特征被选中，则所有的子特征都会被选中）</li>
+<li>Streaming features （随着时间的变动，会采集新的特征）</li>
+</ul>
+<p>3）最后才是考虑你喜欢哪一种Feature Selection方法：</p>
+<ul>
+<li><strong>Filter方法: 这类方法将从Dataset的feature本身出发，考察变量之间的相关性(correlation)等，并不考虑做了feature selection之后你使用的特定算法</strong>。举个例子：如果说数据是有label的(我们的算法是classification)，并且我们的特征空间是flat feature，那么它可能会计算label和其它feature之间的相关性来找到relevant features; 然后再考察relevant features之间的相关性，来找到redundant features. 如果我们的数据是没有label(我们的算法是clustering)那么可能直接计算features之间的相关性，或者使用其它方法。这类方法其实是最基本的，但是在国内的统计学教科书上很少做相关介绍。比如说，我们可以使用Fisher score,    Mutual Information , Relief 等来衡量上述的correlation. </li>
+<li><strong>Wrapper方法：这类方法在做feature selection的时候，先选出来一部分特征，然后将这部分特征用于运行你的特定算法（比如说决策树），看看表现如何；然后重复上述步骤，直到选出“最好的”特征子集为止。</strong></li>
+<li><strong>Embedding 方法：这一类方法的话，就是把feature selection这种思想在算法里built-in了，并不单独拎出来。</strong>举个例子：见下图，就lasso回归来说，在拟合误差项后面再给你整一项惩罚项来进行feature selection。</li>
+</ul>
+<script type="math/tex; mode=display">
+\sum_{i=1}^M(y_i-\hat{y_i})^2 = \sum_{i=1}^M (y_i - \sum_{j=0}^pw_j \times x_{ij}) + \lambda \sum_{j=0}^p|w_j|</script><p>我们可以看到这就是built-in的思想，你无法将其单拎出来，而是“浑然天成“一体。再说一点题外话，在实际应用中，如果feature dimension过于庞大，一般都是使用filter方法；或者是使用filter方法进行预处理，剔除一批“劣质”特征，然后再使用Wrapper或者Embedding进行“精选”。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/03/%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%B9%B3%E6%BB%91CTR%E7%89%B9%E5%BE%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -168,10 +256,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-07-03 12:28:58 / Modified: 21:59:29" itemprop="dateCreated datePublished" datetime="2021-07-03T12:28:58+08:00">2021-07-03</time>
+              <time title="Created: 2021-07-03 12:28:58" itemprop="dateCreated datePublished" datetime="2021-07-03T12:28:58+08:00">2021-07-03</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-07-15 21:54:30" itemprop="dateModified" datetime="2021-07-15T21:54:30+08:00">2021-07-15</time>
+              </span>
 
           
 
@@ -184,13 +278,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="1-Challenges"><a href="#1-Challenges" class="headerlink" title="1. Challenges"></a>1. Challenges</h3><p>由于数据的稀疏性，对广告进行CTR预估是比较具有挑战性的，预估出来的CTR的可靠性不高，且具有较大的方差。主要有以下两类场景：</p>
+          <h2 id="1-Challenges"><a href="#1-Challenges" class="headerlink" title="1. Challenges"></a>1. Challenges</h2><p>由于数据的稀疏性，对广告进行CTR预估是比较具有挑战性的，预估出来的CTR的可靠性不高，且具有较大的方差。</p>
 <p>1）当广告的展示次数较少的时候，对其直接进行CTR的统计计算会导致一个偏高的结果。比如某个广告只展示了1次，被点击了1次，则纯粹的统计CTR=1.0，这显然是过分高估了。</p>
 <p>2）当广告的展示次数很大，但点击次数很少或几乎没有的时候，对其直接进行CTR的统计计算会导致一个偏低的结果。比如某个广告没有被点击过，则纯粹的统计CTR=0.0，这显然是过分低估了。</p>
-<h3 id="2-数据层级结构"><a href="#2-数据层级结构" class="headerlink" title="2. 数据层级结构"></a>2. 数据层级结构</h3><p>在许多场景下，数据是很自然地存在层级结构，或者可以通过数据的聚类的方式得到层级结构的。</p>
+<h2 id="2-Motivation"><a href="#2-Motivation" class="headerlink" title="2. Motivation"></a>2. Motivation</h2><p>在许多场景下，数据是很自然地存在层级结构，或者可以通过数据的聚类的方式得到层级结构的。</p>
 <p><img src="https://i.loli.net/2021/07/03/oxVKB3AXPwqNLRT.png" alt="img"></p>
 <p>我们假设事件的发生并不是相互独立的，相反，在层级结构中相对比较靠近的两个事件的相关性要大于距离较远的两个事件，它们之间拥有很多共通之处。于是，我们便可以利用“相似”事件的信息来丰富某个我们感兴趣的事件（这个事件本事的发生的次数比较少）。具体到我们现有的场景下，可以利用与我们需要预估的事件（比如query-ad pair，或者page-ad pair）的“相似”事件的信息来帮助我们来做出预估计算。</p>
-<p>假设有相同account下的N个ad $(a_1, a_2, …, a_N)$ ，以及所在的page，我们感兴趣的是page-ad pair的CTR，于是我们可以利用贝叶斯的方法来结合（1）这个ad本身的信息，以及（2）该page下与这个ad来自相同account的其它ad的信息。我们观测到的点击信息为 $(C_1, C_2, …,C_N)$ ，这些点击信息源自各个ad的隐含CTR信息 $(r_1, r_2,…,r_N)$，点击信息服从二项分布 $Binomial (I_i, C_i)$ 有关，还与其所属的account的整体信息有关，即与 $\alpha, \beta$ 这对超参数有关。我们可以利用二项分布和贝塔分布的共轭特性，计算所有ad所属的相同account的似然函数，然后利用最大似然估计（MLE）来计算超参数  $\alpha, \beta$ ，当有了   $\alpha, \beta$ 的估计值 $\hat{\alpha}, \hat{\beta}$后，我们便可以得到每个ad的后验估计：$\hat{r}_i=(C_i+\hat{\alpha}) / (I_i + \hat{\alpha} + \hat{\beta})$ 。这个后验估计值可以作为一个平滑后的CTR值，它要比单纯地统计CTR $C_i / I_i$ 拥有更小的方差，更加稳定。</p>
+<p>假设有相同account 下的N个ad $(a_1, a_2, …, a_N)$ ，以及所在的page，我们感兴趣的是page-ad pair的CTR，于是我们可以利用贝叶斯的方法来结合（1）这个ad本身的信息，以及（2）该page下与这个ad来自相同account的其它ad的信息。我们观测到的点击信息为 $(C_1, C_2, …,C_N)$ ，这些点击信息源自各个ad的潜在的CTR信息 $(r_1, r_2,…,r_N)$ 有关，点击信息服从二项分布 $Binomial (I_i, r_i)$ 。那么潜在的每个 ad的CTR，可以看作是来自于它们相同的account的公有信息，其服从 $Beta(\alpha, \beta)$。于是乎，每个ad的隐含CTR值，不仅与观测到的展示点击数据 $(I_i, C_i)$ 有关，还与其所属的account的整体信息有关，即与 $\alpha, \beta$ 这对超参数有关。我们可以利用二项分布和贝塔分布的共轭特性，计算所有ad所属的相同account的似然函数，然后利用最大似然估计（MLE）来计算超参数</p>
+<p>我们观测到的点击信息为 $(C_1, C_2, …,C_N)$ ，这些点击信息源自各个ad的潜在的CTR信息 $(r_1, r_2,…,r_N)$，点击信息服从二项分布 $Binomial (I_i, C_i)$ 有关，还与其所属的account的整体信息有关，即与 $\alpha, \beta$ 这对超参数有关。我们可以利用二项分布和贝塔分布的共轭特性，计算所有ad所属的相同account的似然函数，然后利用最大似然估计（MLE）来计算超参数  $\alpha, \beta$ ，当有了   $\alpha, \beta$ 的估计值 $\hat{\alpha}, \hat{\beta}$后，我们便可以得到每个ad的后验估计：$\hat{r}_i=(C_i+\hat{\alpha}) / (I_i + \hat{\alpha} + \hat{\beta})$ 。这个后验估计值可以作为一个平滑后的CTR值，它要比单纯地统计CTR $C_i / I_i$ 拥有更小的方差，更加稳定。</p>
 <h3 id="3-数据连续性"><a href="#3-数据连续性" class="headerlink" title="3. 数据连续性"></a>3. 数据连续性</h3><p>在很多场景下，我们更关心CTR的趋势，而不是一个特定时间点的CTR值。因为对于展示量较少的page-ad pair，某个特定时间点的CTR预估值是包含很大噪声的。我们将展现和点击看做是离散集合的重复观测值，然后使用<strong>指数平滑技术</strong>进行CTR平滑。假设对于page-ad pair，我们有M天的展现 $(I_1, I_2, …, I_M)$ 和 点击 $(C_1, C_2, …, C_M)$ ，然后我们希望预估出第M天的CTR。我们将平滑后的展现和点击记为 $\hat{I}, \hat{C}$ ，它们可由下面公式得到（这里只给出了点击的公式计算，展现也同理）：</p>
 <p><img src="https://i.loli.net/2021/07/03/tfG8YLeO29cXlR6.png" alt="image-20210703214904575" style="zoom:50%;" /></p>
 <p>其中 $0 &lt; \gamma &lt; 1$ 是平滑系数，它控制着我们把历史信息纳入我们平滑的计算中的权重大小。</p>
@@ -208,73 +303,8 @@
 <p>将上述的log似然函数分别对α和β求导数，即为：</p>
 <p><img src="https://i.loli.net/2021/07/03/Nohtd8jfMx3KvwY.png" alt="image-20210703215438290" style="zoom:50%;" /></p>
 <p>通过fixed-point iteration方法，我们可以得到α和β在每一轮迭代中的更新公式：</p>
-<p><img src="C:\Users\14981\AppData\Roaming\Typora\typora-user-images\image-20210703215514582.png" alt="image-20210703215514582" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2021/07/15/vz4lIUGXpLiV9g8.png" alt="image-20210703215514582" style="zoom:50%;" /></p>
 <p>迭代的终止条件为一个固定的迭代次数（如1000次），或者α和β在一次迭代中的变化值都小于一个epsilon（如1E-10）。一旦有了 $\hat{\alpha}, \hat{\beta}$ 我们便可以得到每个ad的后验估计：$\hat{r}_i=(C_i+\hat{\alpha}) / (I_i + \hat{\alpha} + \hat{\beta})$</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/02/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0%20(%E8%A5%BF%E7%93%9C%E4%B9%A6)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Zhao Chen">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="斜光的个人主页">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/02/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0%20(%E8%A5%BF%E7%93%9C%E4%B9%A6)/" class="post-title-link" itemprop="url">集成学习 (ensemble learning, 西瓜书笔记)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-07-02 10:18:56 / Modified: 10:28:10" itemprop="dateCreated datePublished" datetime="2021-07-02T10:18:56+08:00">2021-07-02</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="1-集成学习基本概念"><a href="#1-集成学习基本概念" class="headerlink" title="1. 集成学习基本概念"></a>1. 集成学习基本概念</h3><ul>
-<li>集成学习：构建并结合多个学习器完成学习任务。</li>
-<li>基本架构：先产生一组 ”个体学习器“，通过某种策略将它们组合。</li>
-<li>同质集成：”个体学习器” 称为基学习器，学习算法称为基学习算法。</li>
-<li>异质集成：”个体学习器” 称为组件学习器。</li>
-<li></li>
-</ul>
 
       
     </div>
@@ -383,70 +413,6 @@
 <p>Pima数据集：<a href="https://link.zhihu.com/?target=http%3A//odds.cs.stonybrook.edu/pima-indians-diabetes-dataset/">Pima Indians Diabetes dataset</a></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Data: pima | shape: (<span class="number">768</span>, <span class="number">8</span>) | F1</span><br><span class="line">Threshold Moving:       <span class="number">0.684815686152</span></span><br><span class="line">Original:               <span class="number">0.614437063812</span></span><br><span class="line">Oversampling:           <span class="number">0.744106797407</span></span><br><span class="line">Undersampling:          <span class="number">0.762079698321</span></span><br><span class="line">Undersampling Ensemble: <span class="number">0.667769584397</span></span><br><span class="line">SMOTE:                  <span class="number">0.749990784595</span></span><br><span class="line"></span><br><span class="line">Data: pima | shape: (<span class="number">768</span>, <span class="number">8</span>) | ROC</span><br><span class="line">Threshold Moving:       <span class="number">0.824891737892</span></span><br><span class="line">Original:               <span class="number">0.824757834758</span></span><br><span class="line">Oversampling:           <span class="number">0.83276</span></span><br><span class="line">Undersampling:          <span class="number">0.825577308626</span></span><br><span class="line">Undersampling Ensemble: <span class="number">0.82011965812</span></span><br><span class="line">SMOTE:                  <span class="number">0.84188</span></span><br></pre></td></tr></table></figure>
 
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/01/LightGBM/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Zhao Chen">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="斜光的个人主页">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/01/LightGBM/" class="post-title-link" itemprop="url">LightGBM</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-07-01 16:32:43" itemprop="dateCreated datePublished" datetime="2021-07-01T16:32:43+08:00">2021-07-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-02 10:19:08" itemprop="dateModified" datetime="2021-07-02T10:19:08+08:00">2021-07-02</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
       
     </div>
 
@@ -698,7 +664,7 @@ z(X) = \frac{X_i-\mu _X}{\sigma_X}</script><p><strong>平方和（Summed Square�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. Dimensionality reduction (降维)Dimensionality reduction是数据挖掘&#x2F;机器学习里面用来移除不相关特征(irrelevant, noisy)、冗余特征(redundant)的一种常用技术。所谓的不相关特征(irrelevant, noisy)，也就是说这些特征和你要做的事情没有半毛钱关系。举个例子，如果你的算法是为了预测一个上海某高校本科生毕业年">
+<meta property="og:type" content="article">
+<meta property="og:title" content="feature selection">
+<meta property="og:url" content="http://example.com/2021/07/15/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/index.html">
+<meta property="og:site_name" content="斜光的个人主页">
+<meta property="og:description" content="1. Dimensionality reduction (降维)Dimensionality reduction是数据挖掘&#x2F;机器学习里面用来移除不相关特征(irrelevant, noisy)、冗余特征(redundant)的一种常用技术。所谓的不相关特征(irrelevant, noisy)，也就是说这些特征和你要做的事情没有半毛钱关系。举个例子，如果你的算法是为了预测一个上海某高校本科生毕业年">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-07-15T13:51:57.284Z">
+<meta property="article:modified_time" content="2021-07-15T13:51:49.000Z">
+<meta property="article:author" content="Zhao Chen">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/07/15/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>feature selection | 斜光的个人主页</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">斜光的个人主页</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/15/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Zhao Chen">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="斜光的个人主页">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          feature selection
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-07-15 21:51:57 / Modified: 21:51:49" itemprop="dateCreated datePublished" datetime="2021-07-15T21:51:57+08:00">2021-07-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1-Dimensionality-reduction-降维"><a href="#1-Dimensionality-reduction-降维" class="headerlink" title="1. Dimensionality reduction (降维)"></a>1. Dimensionality reduction (降维)</h2><p><strong>Dimensionality reduction是数据挖掘/机器学习里面用来移除不相关特征(irrelevant, noisy)、冗余特征(redundant)的一种常用技术。</strong>所谓的不相关特征(irrelevant, noisy)，也就是说这些特征和你要做的事情没有半毛钱关系。举个例子，如果你的算法是为了预测一个上海某高校本科生毕业年薪是多少，但是你采集变量的时候采集了格陵兰岛今年的降水量。降水量这个特征可以说是没有半毛钱关系；所谓的冗余特征(redundant)，也就是说你采集的特征里面有可能高度相关的：比如说上一届学长学姐的平均税前收入、平均税后收入、平均纳税数额。</p>
+<p>那么同学们有可能会问：数据不是越多越好吗？我们为什么要移除其中一部分变量呢？其实主要有两个原因：1) 由于curse of dimensionality的存在（维数诅咒），导致很多在较低维度空间有效的算法，到了高维空间就可能无效了。2）由于时间和金钱成本，如果你的数据过于庞大，那么用来运行算法的时间以及储存数据的成本就会大大增加。对于大公司来说，金钱都不是太大问题；更多的时候，他们考虑的是时间成本。因为很多时候，他们都希望自己的算法能够提供实时决策(real-time decision)。</p>
+<p><strong>Dimensionality reduction可以粗略地分为两类</strong></p>
+<ul>
+<li>Feature extraction/Feature projection(特征提取/特征投影)</li>
+<li>Feature selection(特征选择)。</li>
+</ul>
+<h2 id="2-Feature-extraction-Feature-projection-特征提取-特征投影"><a href="#2-Feature-extraction-Feature-projection-特征提取-特征投影" class="headerlink" title="2. Feature extraction/ Feature projection(特征提取/特征投影)"></a>2. Feature extraction/ Feature projection(特征提取/特征投影)</h2><p><strong>Feature extraction/ Feature projection</strong>这一类方法将高维的特征空间投影到一个新的低维特征空间，这些新构造的低维空间里面的feature往往都是original feature（原始特征）的组合（线性组合，加权组合等）。我们可以看到，这一类技术并不保留original feature，所以使用这类降维技术的算法解释性(interpretability)都相对较差，从而相比之下feature selection有的时候更受欢迎。这一类技术的代表主要有： 主成分分析(Principle Component Analysis)、线性判别分析(Linear Discriminant Analysis)、典型相关分析(Canonical Correlation Analysis). 再说点题外话：<strong>对于这一类技术，我更喜欢叫它feature projection(特征投影)</strong>，这是为什么呢？因为feature extraction这个词汇在机器学习领域有不同的含义，比如说在时间序列分析里面，当我们讲feature extraction时，我们一般是指从一段时间序列里面提取(extract)出一些有用特征 (feature)，比如说此时间序列的max、min、mean、std、kurtosis、skewness等等。还有的部分文献会叫这种方法feature transformation(特征转换)，其实这也是不恰当的。因为在机器学习领域，当我们说feature transformation的时候，一般是指对一个变量进行函数变换，比如说x变到log(x)等等。</p>
+<h2 id="3-Feature-selection-特征选择"><a href="#3-Feature-selection-特征选择" class="headerlink" title="3. Feature selection(特征选择)"></a>3. Feature selection(特征选择)</h2><p><strong>Feature selection</strong> 这一类方法从原始特征(original feature)空间里面选择出一部分feature出来，我们希望这部分feature里面包括最少的不相关特征(irrelevant, noisy feature)和冗余特征(redundant)。我们可以看到，这类方法会保留原始特征，所以使用这类降维技术的算法解释性(interpretability)都相对较好，这也是为什么我在我的项目里面选择使用feature selection的原因。这一类技术的代表主要有：    Information Gain、Relief、Fisher Score、Lasso等。</p>
+<h2 id="4-Feature-selection-展开描述"><a href="#4-Feature-selection-展开描述" class="headerlink" title="4. Feature selection 展开描述"></a>4. Feature selection 展开描述</h2><p>鉴于很多同学或者参考文献一开始就讲Filter、Wrapper、Embedding各种分类方法，我认为在讲这些分类方法之前，我们首先需要考虑以下几件事：</p>
+<p>1）我们的算法是属于哪一类？</p>
+<ul>
+<li>Supervised(classification、regression)、</li>
+<li>unsupervised(clustering)、</li>
+<li>semi-supervised. </li>
+</ul>
+<p>2)  我们的特征空间属于哪一类：</p>
+<ul>
+<li>Flat features (也就是我们最常见的Dataset的情况，特征是静态的、而且彼此之间不存在特定的组织架构关系，结合后面两点对比来看就能理解); </li>
+<li>Structured Features（特征之间存在一定的组织架构关系），比如说 Group Structure（某些特征属于特定小组，若选则全都选、若不选则全都不要） 、Tree Structure （特征之间存在父子包含关系，若父特征被选中，则所有的子特征都会被选中）</li>
+<li>Streaming features （随着时间的变动，会采集新的特征）</li>
+</ul>
+<p>3）最后才是考虑你喜欢哪一种Feature Selection方法：</p>
+<ul>
+<li><strong>Filter方法: 这类方法将从Dataset的feature本身出发，考察变量之间的相关性(correlation)等，并不考虑做了feature selection之后你使用的特定算法</strong>。举个例子：如果说数据是有label的(我们的算法是classification)，并且我们的特征空间是flat feature，那么它可能会计算label和其它feature之间的相关性来找到relevant features; 然后再考察relevant features之间的相关性，来找到redundant features. 如果我们的数据是没有label(我们的算法是clustering)那么可能直接计算features之间的相关性，或者使用其它方法。这类方法其实是最基本的，但是在国内的统计学教科书上很少做相关介绍。比如说，我们可以使用Fisher score,    Mutual Information , Relief 等来衡量上述的correlation. </li>
+<li><strong>Wrapper方法：这类方法在做feature selection的时候，先选出来一部分特征，然后将这部分特征用于运行你的特定算法（比如说决策树），看看表现如何；然后重复上述步骤，直到选出“最好的”特征子集为止。</strong></li>
+<li><strong>Embedding 方法：这一类方法的话，就是把feature selection这种思想在算法里built-in了，并不单独拎出来。</strong>举个例子：见下图，就lasso回归来说，在拟合误差项后面再给你整一项惩罚项来进行feature selection。</li>
+</ul>
+<script type="math/tex; mode=display">
+\sum_{i=1}^M(y_i-\hat{y_i})^2 = \sum_{i=1}^M (y_i - \sum_{j=0}^pw_j \times x_{ij}) + \lambda \sum_{j=0}^p|w_j|</script><p>我们可以看到这就是built-in的思想，你无法将其单拎出来，而是“浑然天成“一体。再说一点题外话，在实际应用中，如果feature dimension过于庞大，一般都是使用filter方法；或者是使用filter方法进行预处理，剔除一批“劣质”特征，然后再使用Wrapper或者Embedding进行“精选”。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/07/03/%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%B9%B3%E6%BB%91CTR%E7%89%B9%E5%BE%81/" rel="prev" title="CTR预估中的贝叶斯平滑方法">
+      <i class="fa fa-chevron-left"></i> CTR预估中的贝叶斯平滑方法
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Dimensionality-reduction-%E9%99%8D%E7%BB%B4"><span class="nav-number">1.</span> <span class="nav-text">1. Dimensionality reduction (降维)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Feature-extraction-Feature-projection-%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96-%E7%89%B9%E5%BE%81%E6%8A%95%E5%BD%B1"><span class="nav-number">2.</span> <span class="nav-text">2. Feature extraction&#x2F; Feature projection(特征提取&#x2F;特征投影)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Feature-selection-%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">3.</span> <span class="nav-text">3. Feature selection(特征选择)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Feature-selection-%E5%B1%95%E5%BC%80%E6%8F%8F%E8%BF%B0"><span class="nav-number">4.</span> <span class="nav-text">4. Feature selection 展开描述</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Zhao Chen</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhao Chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
